@@ -1,0 +1,10 @@
+BEGIN;
+--
+-- Create model Choice
+--
+CREATE TABLE "annotate_choice" ("id" integer NOT NULL PRIMARY KEY AUTOINCREMENT, "choice_text" varchar(200) NOT NULL);
+--
+-- Create model URI
+--
+CREATE TABLE "annotate_uri" ("id" integer NOT NULL PRIMARY KEY AUTOINCREMENT, "URI_text" varchar(200) NOT NULL, "user_choice_id" integer NOT NULL REFERENCES "annotate_choice" ("id") DEFERRABLE INITIALLY DEFERRED);
+CREATE INDEX "annotate_uri_user_choice_id_b73b6579" ON "annotate_uri" ("user_choice_id");

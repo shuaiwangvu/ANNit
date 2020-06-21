@@ -15,6 +15,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import include, path
+# from . import views
 
 urlpatterns = [
     path('annotate/', include('annotate.urls')),
@@ -22,4 +23,6 @@ urlpatterns = [
     path('import/', include('import.urls')),
     path('export/', include('export.urls')),
     path('admin/', admin.site.urls),
+    # ex: /polls/
+
 ]
