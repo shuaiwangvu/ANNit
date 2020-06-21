@@ -6,15 +6,40 @@
 <body>
 
 <div class="w3-container w3-teal">
-  <h1>My Car</h1>
+  <h1>ANNit</h1>
 </div>
 
 <!-- <img src="img_car.jpg" alt="Car" style="width:100%"> -->
 
-<div class="w3-container">
+<!-- <div class="w3-container">
   <p>URI = {{ entry.URI_text }}.</p>
   <p>Choice = {{ entry.user_choice }}.</p>
-</div>
+</div> -->
+
+
+<h1>{{ entry.URI_text }}</h1>
+
+Choices
+
+<!-- <ul>
+{% for choice in all_choices.all %}
+    <li>{{ choice.choice_text }}</li>
+{% endfor %}
+</ul> -->
+
+
+
+{% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+
+<form action="{% url 'annotate:decide' entry.id %}" method="post">
+{% csrf_token %}
+{% for choice in all_choices.all %}
+    <input type="radio" name="choice" id="choice{{ forloop.counter }}" value="{{ choice.id }}">
+    <label for="choice{{ forloop.counter }}">{{ choice.choice_text }}</label><br>
+{% endfor %}
+<input type="submit" value="decide">
+</form>
+
 
 <div class="w3-container w3-teal">
   <p>My footer information</p>

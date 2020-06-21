@@ -13,15 +13,28 @@
 {% if all_entries %}
     <ul>
     {% for entry in all_entries %}
-        <li><a href="/annotate/{{ entry.id }}/">{{ entry.URI_text }}</a></li>
+        <!-- <li><a href="/annotate/{{ entry.id }}/">{{ entry.URI_text }}</a></li> -->
+				<li><a href="{% url 'annotate:detail' entry.id %}">{{ entry.URI_text }}</a></li>
     {% endfor %}
     </ul>
 {% else %}
     <p>No polls are available.</p>
 {% endif %}
-<div class="w3-container">
+
+{% if all_choices %}
+    <ul>
+    {% for choice in all_choices %}
+        <!-- <li><a href="/annotate/{{ entry.id }}/">{{ entry.URI_text }}</a></li> -->
+				<li><a>{{ choice.choice_text }}</a></li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>No polls are available.</p>
+{% endif %}
+
+<!-- <div class="w3-container">
   <p>A car is a wheeled, self-powered motor vehicle used for transportation.</p>
-</div>
+</div> -->
 
 <div class="w3-container w3-teal">
   <p>My footer information</p>

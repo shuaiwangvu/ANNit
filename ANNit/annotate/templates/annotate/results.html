@@ -1,0 +1,11 @@
+<h1>{{ entry.URI_text }}</h1>
+
+<!-- <ul>
+{% for choice in all_choices.all %}
+    <li>{{ choice.choice_text }}  decide </li>
+{% endfor %}
+</ul> -->
+
+{{ entry.user_choice }}
+
+<a href="{% url 'annotate:detail' entry.id %}">Decide again?</a>

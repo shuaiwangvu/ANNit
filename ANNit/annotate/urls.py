@@ -2,6 +2,8 @@ from django.urls import path
 
 from . import views
 
+app_name = 'annotate'
+
 urlpatterns = [
     path('', views.index, name='index'),
     # ex: /polls/5/
@@ -10,4 +12,5 @@ urlpatterns = [
     path('<int:entry_id>/results/', views.results, name='results'),
     # ex: /polls/5/vote/
     path('<int:entry_id>/decide/', views.decide, name='decide'),
+    # path('<int:question_id>/vote/', views.vote, name='vote'),
 ]
