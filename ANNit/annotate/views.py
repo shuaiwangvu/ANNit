@@ -97,7 +97,8 @@ def decide(request, entry_id):
     entry = get_object_or_404(Entry, pk=entry_id)
     all_choices = Choice.objects.all()
 
-    comment = request.POST['comment'] # u_name is the name of the input tag
+    # is_private = request.POST.get('is_private', False)
+    comment = request.POST.get('comment', False) # u_name is the name of the input tag
     if comment != None and comment != '':
         print('Comment:', comment)
         entry.comment = comment
@@ -141,8 +142,10 @@ def decide(request, entry_id):
         return HttpResponseRedirect(reverse('annotate:results', args=(entry.id,)))
 
 
-
 def results(request, entry_id):
     entry = get_object_or_404(Entry, pk=entry_id)
     all_choices = Choice.objects.all()
     return render(request, 'annotate/results.html', {'entry': entry, 'all_choices':all_choices})
+#
+# def next_entry (request, entry_id):
+#     return HttpResponseRedirect(reverse('annotate:detail', args=(entry.id +1,)))
