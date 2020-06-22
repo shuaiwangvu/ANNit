@@ -14,5 +14,6 @@ urlpatterns = [
     # ex: /polls/5/vote/
     path('<int:entry_id>/decide/', views.decide, name='decide'),
     path('export', views.export, name='export'),
+    path('<int:entry_id>/next_entry', views.next_entry, name='next_entry'),
     # path('<int:question_id>/vote/', views.vote, name='vote'),
 ]

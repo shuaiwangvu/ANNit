@@ -6,9 +6,11 @@ from django.shortcuts import render, get_object_or_404
 from django.urls import reverse
 import csv
 
-path_to_csv_file = ""
+path_to_csv_file = ''
 
 def load_entries(path):
+    global path_to_csv_file
+    path_to_csv_file = path
     Entry.objects.all().delete()
     with open(path) as file:
         csv_reader = csv.DictReader(file)
@@ -19,8 +21,8 @@ def load_entries(path):
     Choice.objects.all().delete()
 
 def export(request):
-    global path_to_csv_file
-    export_full_name = path_to_csv_file[:path_to_csv_file.rfind('/')+1] + path_to_csv_file[path_to_csv_file.rfind('/')+1:][:2] + '_annotated.csv'
+    print('path to csv file',path_to_csv_file)
+    export_full_name = path_to_csv_file[:path_to_csv_file.rfind('/')+1] + path_to_csv_file[path_to_csv_file.rfind('/')+1:][:2] + 'Annotated.csv'
     with open(export_full_name, "w+") as file:
         writer = csv.writer(file)
         writer.writerow([ "Entry", "Annotation", "Comment"])
@@ -33,6 +35,19 @@ def export(request):
     context = {'all_entries': all_entries, 'all_choices':all_choices}
     return render(request, 'annotate/index.html', context)
 
+def next_entry(request, entry_id):
+    # unless all got annotated
+    all_entries = Entry.objects.all()
+    amount_entry = len(all_entries)
+    all_choices = Choice.objects.all()
+    amount_choice = len (all_choices)
+
+    if entry_id < max([e.id for e in all_entries]):
+        entry_id += 1
+    else:
+        print ('All finished!')
+    entry = get_object_or_404(Entry, pk=entry_id)
+    return render(request, 'annotate/detail.html', {'entry': entry, 'all_choices': all_choices})
 
 # def index(request):
 #     all_entries = Entry.objects.all()
@@ -93,9 +108,9 @@ def detail(request, entry_id):
     print ('Amount of choices ', len (all_choices))
     return render(request, 'annotate/detail.html', {'entry': entry, 'all_choices': all_choices})
 
-def results(request, entry_id):
-    response = "You're looking at the results of entry %s."
-    return HttpResponse(response % entry_id)
+# def results(request, entry_id):
+#     response = "You're looking at the results of entry %s."
+#     return HttpResponse(response % entry_id)
     # todo : redirect?
 
 # def decide(request, entry_id):
