@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html>
-<title>Annit</title>
+<title>ANNit</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <!-- <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css"> -->
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
@@ -10,7 +10,26 @@
 body,h1 {font-family: "Raleway", Arial, sans-serif}
 h1 {letter-spacing: 6px}
 .w3-row-padding img {margin-bottom: 12px}
+* {
+  box-sizing: border-box;
+}
+
+/* Create two equal columns that floats next to each other */
+.column {
+  float: left;
+  width: 50%;
+  padding: 10px;
+  height: 300px; /* Should be removed. Only for demonstration */
+}
+
+/* Clear floats after the columns */
+.row:after {
+  content: "";
+  display: table;
+  clear: both;
+}
 </style>
+
 <body>
 
 <div class="w3-container w3-dark-grey">
@@ -25,9 +44,26 @@ h1 {letter-spacing: 6px}
 </div> -->
 
 
-<h1>{{ entry.URI_text }}</h1>
+<div class="row">
+  <div class="column" style="background-color:#aaa;">
 
-Choices
+    <iframe id="content" src="https://krr.triply.cc/krr/lod-a-lot/browser?resource={{entry.URI_text}}" style="display:hidden;" width="634" height="900" ></iframe>
+
+
+
+
+
+
+  </div>
+  <div class="column" style="background-color:#bbb;">
+
+
+
+
+
+<!-- <h1>{{ entry.URI_text }}</h1> -->
+
+<!-- Choices -->
 
 <!-- <ul>
 {% for choice in all_choices.all %}
@@ -47,6 +83,37 @@ Choices
 {% endfor %}
 <input type="submit" value="decide">
 </form>
+
+
+<div class="w3-container">
+<form method="post" enctype="multipart/form-data" action="{% url 'annotate:decide' entry.id %}">
+{% csrf_token %}
+   <!-- <input type="text" name="u_name"> -->
+    <!-- <input type="submit" value="ok"> -->
+    <!-- <button type='submit' href="annotate" class="w3-button w3-white w3-padding-large w3-hover-black">Load File</button> -->
+<br>
+<!-- <input type="submit" value="ok"> -->
+    <input type="text" name="a_name">
+     <button type='submit' href="annotate" class="w3-button w3-white w3-padding-large w3-hover-black">Or add New Annotation</button>
+<br>
+     <input type="text" name="comment">
+      <button type='submit' href="annotate" class="w3-button w3-white w3-padding-large w3-hover-black">Any comments?</button>
+     <!-- <label for="choice{{ forloop.counter }}">Clear Annotations</label> -->
+     <!-- <input type="submit" name="clear_names"> -->
+     <!-- <button type='submit' name="clear_names">Clear All Annotations</button> TODO -->
+      <!-- <input type="submit" value="ok"> -->
+
+</form>
+</div>
+
+
+<iframe id="content" src="{{entry.URI_text}}" style="display:hidden;" width="634" height="400" ></iframe>
+
+
+
+  </div>
+</div>
+
 
 
 <div class="w3-container w3-dark-grey">

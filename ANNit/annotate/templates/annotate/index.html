@@ -10,6 +10,7 @@
 body,h1 {font-family: "Raleway", Arial, sans-serif}
 h1 {letter-spacing: 6px}
 .w3-row-padding img {margin-bottom: 12px}
+td {max-width: 20px; word-wrap: break-word; text-wrap: normal}
 </style>
 <body>
 
@@ -24,46 +25,19 @@ h1 {letter-spacing: 6px}
 {% csrf_token %}
    <input type="text" name="u_name">
     <!-- <input type="submit" value="ok"> -->
-    <button type='submit' href="annotate" class="w3-button w3-white w3-padding-large w3-hover-black">Start1</button>
+    <button type='submit' href="annotate" class="w3-button w3-white w3-padding-large w3-hover-black">Load File</button>
+<br>
+    <input type="text" name="a_name">
+     <!-- <input type="submit" value="ok"> -->
+     <button type='submit' href="annotate" class="w3-button w3-white w3-padding-large w3-hover-black">Add New Annotation</button>
+
+     <!-- <label for="choice{{ forloop.counter }}">Clear Annotations</label> -->
+     <!-- <input type="submit" name="clear_names"> -->
+     <!-- <button type='submit' name="clear_names">Clear All Annotations</button> TODO -->
+      <!-- <input type="submit" value="ok"> -->
+    
 </form>
 </div>
-
-
-<!-- <img src="img_car.jpg" alt="Car" style="width:100%"> -->
-{% if all_entries %}
-    <div class="w3-container">
-      <p>The following are the annotated ones</p>
-
-      <table class="w3-table w3-bordered w3-striped">
-        <tr class="w3-dark-grey">
-          <th>id</th>
-          <th>URI</th>
-          <th>Annotation</th>
-          <th>Comment</th>
-
-        </tr>
-
-        <ul>
-        {% for entry in all_entries %}
-            <!-- <li><a href="/annotate/{{ entry.id }}/">{{ entry.URI_text }}</a></li> -->
-    				<!-- <li><a href="{% url 'annotate:detail' entry.id %}">{{ entry.URI_text }}</a></li> -->
-            <tr>
-              <td><a href="{% url 'annotate:detail' entry.id %}">{{ entry.id }}</a></td>
-              <td><a href="{% url 'annotate:detail' entry.id %}">{{ entry.URI_text }}</a></td>
-              <td><a >{{ entry.user_choice }}</a></td>
-              <td><a >{{ entry.comment }}</a></td>
-
-            </tr>
-        {% endfor %}
-        </ul>
-
-      </table>
-    </div>
-
-
-{% else %}
-    <p>No polls are available.</p>
-{% endif %}
 
 
 
@@ -88,13 +62,58 @@ h1 {letter-spacing: 6px}
           </tr>
       {% endfor %}
       <!-- </ul> -->
-
+<!--
+      <form method="post" enctype="multipart/form-data" action="load">
+      {% csrf_token %}
+         <input type="text" name="a_name">
+          <!-- <input type="submit" value="ok"> -->
+          <!-- <button type='submit' href="annotate" class="w3-button w3-white w3-padding-large w3-hover-black">Add to Annotation</button>
+      </form> -->
 
   </table>
 </div>
 {% else %}
-    <p>No polls are available.</p>
+    <p>No annotation available. Please add some!</p>
 {% endif %}
+
+
+<!-- <img src="img_car.jpg" alt="Car" style="width:100%"> -->
+{% if all_entries %}
+    <div class="w3-container">
+      <p>The following are the entries</p>
+
+      <table class="w3-table w3-bordered w3-striped" table-layout="auto" width="30%">
+        <tr class="w3-dark-grey">
+          <!-- <td>id</td> -->
+          <td>URI</td>
+          <td>Annotation</td>
+          <td>Comment</td>
+        </tr>
+
+        <ul>
+        {% for entry in all_entries %}
+            <!-- <li><a href="/annotate/{{ entry.id }}/">{{ entry.URI_text }}</a></li> -->
+    				<!-- <li><a href="{% url 'annotate:detail' entry.id %}">{{ entry.URI_text }}</a></li> -->
+            <tr>
+              <!-- <td><a href="{% url 'annotate:detail' entry.id %}">{{ entry.id }}</a></td> -->
+              <td><a href="{% url 'annotate:detail' entry.id %}">{{ entry.URI_text }}</a></td>
+              <td><a >{{ entry.user_choice }}</a></td>
+              <td><a >{{ entry.comment }}</a></td>
+
+            </tr>
+        {% endfor %}
+        </ul>
+
+      </table>
+    </div>
+
+
+{% else %}
+    <p>No choice available.</p>
+{% endif %}
+
+
+
 
 
 
