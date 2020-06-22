@@ -35,9 +35,28 @@ td {max-width: 20px; word-wrap: break-word; text-wrap: normal}
      <!-- <input type="submit" name="clear_names"> -->
      <!-- <button type='submit' name="clear_names">Clear All Annotations</button> TODO -->
       <!-- <input type="submit" value="ok"> -->
-    
+
 </form>
 </div>
+
+
+<!--
+
+<div class="w3-container">
+<form method="post" enctype="multipart/form-data" action="save_entries">
+{% csrf_token %}
+
+     <button type='submit' href="annotate" class="w3-button w3-white w3-padding-large w3-hover-black">Export All</button>
+
+</form>
+</div> -->
+
+
+<form action='export' method='GET'>
+<!-- <button type='submit'> sort me</button> -->
+<button type='submit' href="export" class="w3-button w3-white w3-padding-large w3-hover-black">MyExport</button>
+</form>
+
 
 
 

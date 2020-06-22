@@ -7,6 +7,7 @@ from django.urls import reverse
 import csv
 
 path_to_csv_file = ""
+
 def load_entries(path):
     Entry.objects.all().delete()
     with open(path) as file:
@@ -17,13 +18,21 @@ def load_entries(path):
             e.save()
     Choice.objects.all().delete()
 
-def save_entries(path):
-    with open(path) as file:
+def export(request):
+    global path_to_csv_file
+    export_full_name = path_to_csv_file[:path_to_csv_file.rfind('/')+1] + path_to_csv_file[path_to_csv_file.rfind('/')+1:][:2] + '_annotated.csv'
+    with open(export_full_name, "w+") as file:
         writer = csv.writer(file)
         writer.writerow([ "Entry", "Annotation", "Comment"])
         all_entries = Entry.objects.all()
         for e in all_entries:
-            writer.writerow([])
+            writer.writerow([e.URI_text, e.user_choice, e.comment])
+    print ('exported to: ', export_full_name)
+    all_entries = Entry.objects.all()
+    all_choices = Choice.objects.all()
+    context = {'all_entries': all_entries, 'all_choices':all_choices}
+    return render(request, 'annotate/index.html', context)
+
 
 # def index(request):
 #     all_entries = Entry.objects.all()
@@ -99,10 +108,14 @@ def decide(request, entry_id):
 
     # is_private = request.POST.get('is_private', False)
     comment = request.POST.get('comment', False) # u_name is the name of the input tag
-    if comment != None and comment != '':
+    if comment != None and comment != '' and comment != False:
         print('Comment:', comment)
         entry.comment = comment
         entry.save()
+    else:
+        entry.comment = 'TBA'
+        entry.save()
+
 
     try:
         selected_choice = all_choices.get(pk=request.POST['choice'])
