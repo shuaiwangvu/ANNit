@@ -6,6 +6,7 @@ app_name = 'annotate'
 
 urlpatterns = [
     path('', views.index, name='index'),
+    path('load', views.load, name='load'),
     # ex: /polls/5/
     path('<int:entry_id>/', views.detail, name='detail'),
     # ex: /polls/5/results/

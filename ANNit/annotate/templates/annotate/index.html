@@ -1,42 +1,112 @@
 <!DOCTYPE html>
 <html>
-<title>W3.CSS</title>
+<title>ANNit</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css"> -->
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<style>
+body,h1 {font-family: "Raleway", Arial, sans-serif}
+h1 {letter-spacing: 6px}
+.w3-row-padding img {margin-bottom: 12px}
+</style>
 <body>
 
-<div class="w3-container w3-teal">
-  <h1>My Car</h1>
+<div class="w3-container w3-dark-grey">
+  <h1>- ANNit -</h1>
 </div>
+
+
+
+<div class="w3-container">
+<form method="post" enctype="multipart/form-data" action="load">
+{% csrf_token %}
+   <input type="text" name="u_name">
+    <!-- <input type="submit" value="ok"> -->
+    <button type='submit' href="annotate" class="w3-button w3-white w3-padding-large w3-hover-black">Start1</button>
+</form>
+</div>
+
 
 <!-- <img src="img_car.jpg" alt="Car" style="width:100%"> -->
 {% if all_entries %}
-    <ul>
-    {% for entry in all_entries %}
-        <!-- <li><a href="/annotate/{{ entry.id }}/">{{ entry.URI_text }}</a></li> -->
-				<li><a href="{% url 'annotate:detail' entry.id %}">{{ entry.URI_text }}</a></li>
-    {% endfor %}
-    </ul>
+    <div class="w3-container">
+      <p>The following are the annotated ones</p>
+
+      <table class="w3-table w3-bordered w3-striped">
+        <tr class="w3-dark-grey">
+          <th>id</th>
+          <th>URI</th>
+          <th>Annotation</th>
+          <th>Comment</th>
+
+        </tr>
+
+        <ul>
+        {% for entry in all_entries %}
+            <!-- <li><a href="/annotate/{{ entry.id }}/">{{ entry.URI_text }}</a></li> -->
+    				<!-- <li><a href="{% url 'annotate:detail' entry.id %}">{{ entry.URI_text }}</a></li> -->
+            <tr>
+              <td><a href="{% url 'annotate:detail' entry.id %}">{{ entry.id }}</a></td>
+              <td><a href="{% url 'annotate:detail' entry.id %}">{{ entry.URI_text }}</a></td>
+              <td><a >{{ entry.user_choice }}</a></td>
+              <td><a >{{ entry.comment }}</a></td>
+
+            </tr>
+        {% endfor %}
+        </ul>
+
+      </table>
+    </div>
+
+
 {% else %}
     <p>No polls are available.</p>
 {% endif %}
 
-{% if all_choices %}
-    <ul>
-    {% for choice in all_choices %}
-        <!-- <li><a href="/annotate/{{ entry.id }}/">{{ entry.URI_text }}</a></li> -->
-				<li><a>{{ choice.choice_text }}</a></li>
-    {% endfor %}
-    </ul>
+
+
+  {% if all_choices %}
+<div class="w3-container">
+  <p>The following are the annotations</p>
+<table class="w3-table w3-bordered w3-striped">
+
+  <tr class="w3-dark-grey">
+    <td>Annotation</td>
+
+  </tr>
+
+      <!-- <ul> -->
+      {% for choice in all_choices %}
+          <!-- <li><a href="/annotate/{{ entry.id }}/">{{ entry.URI_text }}</a></li> -->
+  				<!-- <li><a>{{ choice.choice_text }}</a></li> -->
+          <tr>
+            <th><a>{{ choice.choice_text }}</a></th>
+            <!-- <th>Last Name</th>
+            <th>Points</th> -->
+          </tr>
+      {% endfor %}
+      <!-- </ul> -->
+
+
+  </table>
+</div>
 {% else %}
     <p>No polls are available.</p>
 {% endif %}
+
+
+
+
+
+
 
 <!-- <div class="w3-container">
   <p>A car is a wheeled, self-powered motor vehicle used for transportation.</p>
 </div> -->
 
-<div class="w3-container w3-teal">
+<div class="w3-container w3-dark-grey">
   <p>My footer information</p>
 </div>
 

@@ -28,6 +28,14 @@ def index(request):
     context = {'all_entries': all_entries, 'all_choices':all_choices}
     return render(request, 'annotate/index.html', context)
 
+def load (request):
+    all_entries = Entry.objects.all()
+    all_choices = Choice.objects.all()
+    name = request.POST['u_name'] # u_name is the name of the input tag
+    print ('load the file at = ', name)
+    context = {'all_entries': all_entries, 'all_choices':all_choices, 'name':name}
+    return render(request, 'annotate/index.html', context)
+
 # def detail(request, entry_id):
 #     return HttpResponse("You're looking at entry %s." % entry_id)
 
