@@ -21,10 +21,11 @@ def load_entries(path):
     Choice.objects.all().delete()
 
 def export(request):
+    global path_to_csv_file
     print('path to csv file',path_to_csv_file)
-    export_full_name = path_to_csv_file[:path_to_csv_file.rfind('/')+1] + path_to_csv_file[path_to_csv_file.rfind('/')+1:][:2] + 'Annotated.csv'
+    export_full_name = path_to_csv_file[:path_to_csv_file.rfind('/')+1] + path_to_csv_file[path_to_csv_file.rfind('/')+1:][:2] + 'Annotated.tsv' # change it to TSV file.
     with open(export_full_name, "w+") as file:
-        writer = csv.writer(file)
+        writer = csv.writer(file,delimiter='\t')
         writer.writerow([ "Entry", "Annotation", "Comment"])
         all_entries = Entry.objects.all()
         for e in all_entries:
