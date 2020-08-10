@@ -19,6 +19,7 @@ from django.urls import include, path
 
 urlpatterns = [
     path('annotate/', include('annotate.urls')),
+    path('pair/', include('pair.urls')),
     path('', include('info.urls')),
     path('import/', include('import.urls')),
     path('export/', include('export.urls')),

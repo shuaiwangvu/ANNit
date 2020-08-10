@@ -38,7 +38,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'annotate.apps.AnnotateConfig',
+    'pair.apps.PairConfig',
     'info.apps.InfoConfig',
+    'autotranslate',
     # 'crispy_forms', # for the form
     # "bootstrap4",
 ]
