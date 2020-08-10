@@ -9,11 +9,11 @@ from django.shortcuts import render, get_object_or_404
 from django.urls import reverse
 import csv
 
-
 path_to_csv_file = ''
 
 def load_entries(path):
 	global path_to_csv_file
+	path_to_csv_file = path
 	filename = path
 	Entry.objects.all().delete()
 	Choice.objects.all().delete()
@@ -25,18 +25,33 @@ def load_entries(path):
 			e = Entry(left_URI_text = row[0], right_URI_text = row[1])
 			e.save()
 	print ('There are in total ', Entry.objects.count(), ' entries')
+		# equal =  'equal'
+		# left_more_general = 'left>right'
+		# right_more_general = 'left<right'
+		# neither = 'neither'
+		# unknown = 'unknown'
+	e = Choice(choice_text = Choice.equal)
+	e.save()
+	e = Choice(choice_text = Choice.left_more_general)
+	e.save()
+	e = Choice(choice_text = Choice.right_more_general)
+	e.save()
+	e = Choice(choice_text = Choice.neither)
+	e.save()
+	e = Choice(choice_text = Choice.unknown)
+	e.save()
 
 
 def export(request):
 	global path_to_csv_file
 	print('path to csv file',path_to_csv_file)
-	export_full_name = path_to_csv_file[:path_to_csv_file.rfind('/')+1] + path_to_csv_file[path_to_csv_file.rfind('/')+1:][:2] + 'paird.tsv' # change it to TSV file.
+	export_full_name = path_to_csv_file[:path_to_csv_file.rfind('/')+1] + path_to_csv_file[path_to_csv_file.rfind('/')+1:][:2] + 'pair_annotated.tsv' # change it to TSV file.
 	with open(export_full_name, "w+") as file:
 		writer = csv.writer(file,delimiter='\t')
-		writer.writerow([ "Entry", "Annotation", "Comment"])
+		writer.writerow([ "LEFT", "RIGHT", "UserChoice", "Decision", "Comment"])
 		all_entries = Entry.objects.all()
 		for e in all_entries:
-			writer.writerow([e.URI_text, e.user_choice, e.comment])
+			writer.writerow([e.left_URI_text, e.right_URI_text, e.user_choice, e.user_decision, e.comment])
 	print ('exported to: ', export_full_name)
 	all_entries = Entry.objects.all()
 	all_choices = Choice.objects.all()
@@ -138,8 +153,6 @@ def decide(request, entry_id):
 	else:
 		entry.comment = 'TBA'
 		entry.save()
-
-
 	try:
 		selected_choice = all_choices.get(pk=request.POST['choice'])
 	except (KeyError, Choice.DoesNotExist):
@@ -168,6 +181,27 @@ def decide(request, entry_id):
 			})
 	else:
 		entry.user_choice = selected_choice.choice_text
+		if entry.user_choice == Choice.left_more_general or entry.user_choice == Choice.neither:
+			entry.user_decision = 'remove'
+		elif entry.user_choice == Choice.right_more_general or entry.user_choice == Choice.equal:
+			entry.user_decision = 'remain'
+		elif entry.user_choice == Choice.unknown :
+			entry.user_decision == 'unknown'
+
+		# find if there is an entry similar and make decision automatically
+		for e in Entry.objects.all():
+			if e.left_URI_text ==  entry.right_URI_text  and e.right_URI_text == entry.left_URI_text:
+				if entry.user_choice == Choice.left_more_general:
+					e.user_choice = Choice.right_more_general
+					e.user_decision =  'remain'
+				elif entry.user_choice == Choice.right_more_general:
+					e.user_choice = Choice.left_more_general
+					e.user_decision ==  'remove'
+				elif entry.user_choice == Choice.equal:
+					e.user_decision = 'remain'
+				else:
+					e.user_decision = 'unknown'
+
 		print ('chosen: ', selected_choice.choice_text)
 		entry.save()
 		# selected_choice.votes += 1

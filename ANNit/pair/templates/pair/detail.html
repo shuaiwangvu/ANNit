@@ -46,6 +46,11 @@ h1 {letter-spacing: 6px}
 
 
 
+{% if entry.user_choice != 'TBD' %}
+<h3>There is already a decision on this entry.</h3>
+{% endif %}
+
+
 
 {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
 
@@ -79,6 +84,13 @@ h1 {letter-spacing: 6px}
 
 </form>
 </div>
+
+
+
+
+
+
+
 
 <div class="row">
 <div class="column" style="background-color:#aaa;">
