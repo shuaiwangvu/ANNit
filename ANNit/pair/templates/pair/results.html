@@ -1,0 +1,15 @@
+<h1>{{ entry.URI_text }}</h1>
+
+<!-- <ul>
+{% for choice in all_choices.all %}
+    <li>{{ choice.choice_text }}  decide </li>
+{% endfor %}
+</ul> -->
+
+{{ entry.user_choice }}
+
+<a href="{% url 'pair:detail' entry.id %}">Decide again?</a>
+<br>
+<a href="{% url 'pair:index' %}">Back To Index</a>
+<br>
+<a href="{% url 'pair:next_entry' entry.id%}">Next</a>

@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+<title>ANNit</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css"> -->
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<style>
+body,h1 {font-family: "Raleway", Arial, sans-serif}
+h1 {letter-spacing: 6px}
+.w3-row-padding img {margin-bottom: 12px}
+* {
+  box-sizing: border-box;
+}
+
+/* Create two equal columns that floats next to each other */
+.column {
+  float: left;
+  width: 50%;
+  padding: 10px;
+  height: 630px; /* Should be removed. Only for demonstration */
+}
+
+/* Clear floats after the columns */
+.row:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+</style>
+
+<body>
+
+<div class="w3-container w3-dark-grey">
+  <h1>ANNit</h1>
+</div>
+
+<!-- <img src="img_car.jpg" alt="Car" style="width:100%"> -->
+
+<!-- <div class="w3-container">
+  <p>URI = {{ entry.URI_text }}.</p>
+  <p>Choice = {{ entry.user_choice }}.</p>
+</div> -->
+
+
+
+
+
+{% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+
+<form action="{% url 'pair:decide' entry.id %}" method="post">
+{% csrf_token %}
+{% for choice in all_choices.all %}
+    <input type="radio" name="choice" id="choice{{ forloop.counter }}" value="{{ choice.id }}">
+    <label for="choice{{ forloop.counter }}">{{ choice.choice_text }}</label><br>
+{% endfor %}
+<input type="submit" value="decide">
+</form>
+
+
+<div class="w3-container">
+<form method="post" enctype="multipart/form-data" action="{% url 'pair:decide' entry.id %}">
+{% csrf_token %}
+   <!-- <input type="text" name="u_name"> -->
+    <!-- <input type="submit" value="ok"> -->
+    <!-- <button type='submit' href="pair" class="w3-button w3-white w3-padding-large w3-hover-black">Load File</button> -->
+<br>
+<!-- <input type="submit" value="ok"> -->
+    <input type="text" name="a_name">
+     <button type='submit' href="pair" class="w3-button w3-white w3-padding-large w3-hover-black">Or add New Annotation</button>
+<br>
+     <input type="text" name="comment">
+      <button type='submit' href="pair" class="w3-button w3-white w3-padding-large w3-hover-black">Any comments?</button>
+     <!-- <label for="choice{{ forloop.counter }}">Clear Annotations</label> -->
+     <!-- <input type="submit" name="clear_names"> -->
+     <!-- <button type='submit' name="clear_names">Clear All Annotations</button> TODO -->
+      <!-- <input type="submit" value="ok"> -->
+
+</form>
+</div>
+
+<div class="row">
+<div class="column" style="background-color:#aaa;">
+<iframe id="content" src="{{entry.left_URI_text}}" style="display:hidden;" width="634" height="600" ></iframe>
+</div>
+<div class="column" style="background-color:#aaa;">
+<iframe id="content" src="{{entry.right_URI_text}}" style="display:hidden;" width="634" height="600" ></iframe>
+</div>
+
+</div>
+
+<div class="row">
+  <div class="column" style="background-color:#aaa;">
+
+    <iframe id="content" src="https://krr.triply.cc/krr/lod-a-lot/browser?resource={{entry.left_URI_text}}" style="display:hidden;" width="634" height="600" ></iframe>
+
+  </div>
+  <!-- <div class="column" style="background-color:#bbb;">
+
+  </div> -->
+
+  <div class="column" style="background-color:#aaa;">
+
+    <iframe id="content" src="https://krr.triply.cc/krr/lod-a-lot/browser?resource={{entry.right_URI_text}}" style="display:hidden;" width="634" height="600" ></iframe>
+
+  </div>
+  <!-- <div class="column" style="background-color:#bbb;">
+
+  </div> -->
+
+
+</div>
+
+
+<!--
+<div class="w3-container w3-dark-grey">
+  <p>My footer information</p>
+</div> -->
+
+</body>
+</html>
