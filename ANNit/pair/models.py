@@ -19,7 +19,9 @@ class Choice(models.Model):
 
 class Entry(models.Model):
 	left_URI_text = models.CharField(max_length=200, default="left")
+	left_URI_text_triply = models.CharField(max_length=200, default="left")
 	right_URI_text = models.CharField(max_length=200, default="right")
+	right_URI_text_triply = models.CharField(max_length=200, default="right")
 	# pub_date = models.DateTimeField('date published')
 	user_choice = models.CharField(max_length=200, default = 'TBD')
 	user_decision = models.CharField(max_length=200, default = 'TBD')

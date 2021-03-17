@@ -25,8 +25,8 @@ td {max-width: 20px; word-wrap: break-word; text-wrap: normal}
 {% csrf_token %}
    <input type="text" name="u_name">
 	<!-- <input type="submit" value="ok"> -->
-	<button type='submit' href="pair" class="w3-button w3-white w3-padding-large w3-hover-black">Load File</button>
-<br>
+	<button type='submit' href="pair" class="w3-button w3-white w3-padding-large w3-hover-black">Load new file</button>
+
 	<input type="text" name="a_name">
 	 <!-- <input type="submit" value="ok"> -->
 	 <button type='submit' href="pair" class="w3-button w3-white w3-padding-large w3-hover-black">Add New Annotation</button>
@@ -35,8 +35,19 @@ td {max-width: 20px; word-wrap: break-word; text-wrap: normal}
 	 <!-- <input type="submit" name="clear_names"> -->
 	 <!-- <button type='submit' name="clear_names">Clear All Annotations</button> TODO -->
 	  <!-- <input type="submit" value="ok"> -->
+</form>
+<br>
+or
+<br>
+<form method="post" enctype="multipart/form-data" action="checkannotation">
+{% csrf_token %}
+   <input type="text" name="c_name">
+	<!-- <input type="submit" value="ok"> -->
+	<button type='submit' href="pair" class="w3-button w3-white w3-padding-large w3-hover-black">Load anotated file and check</button>
+
 
 </form>
+
 </div>
 
 
@@ -51,7 +62,9 @@ td {max-width: 20px; word-wrap: break-word; text-wrap: normal}
 </form>
 </div> -->
 
-
+<br>
+when you are all done with annotation, you can export the annotated file.
+<br>
 <form action='export' method='GET'>
 <!-- <button type='submit'> sort me</button> -->
 <button type='submit' href="export" class="w3-button w3-white w3-padding-large w3-hover-black">MyExport</button>
@@ -96,8 +109,12 @@ td {max-width: 20px; word-wrap: break-word; text-wrap: normal}
 {% endif %}
 
 
+
 <!-- <img src="img_car.jpg" alt="Car" style="width:100%"> -->
 {% if all_entries %}
+
+<a href="{% url 'pair:index' %}">Start Annotation</a>
+
 	<div class="w3-container">
 	  <p>The following are the entries</p>
 

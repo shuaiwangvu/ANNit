@@ -40,7 +40,7 @@ INSTALLED_APPS = [
     'annotate.apps.AnnotateConfig',
     'pair.apps.PairConfig',
     'info.apps.InfoConfig',
-    'autotranslate',
+    # 'autotranslate',
     # 'crispy_forms', # for the form
     # "bootstrap4",
 ]

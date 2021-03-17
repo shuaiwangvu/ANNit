@@ -8,6 +8,7 @@ from django.views.generic import CreateView
 from django.shortcuts import render, get_object_or_404
 from django.urls import reverse
 import csv
+from urllib.parse import quote
 
 path_to_csv_file = ''
 
@@ -22,7 +23,9 @@ def load_entries(path):
 		csv_reader = csv.reader(csvfile, delimiter='\t')
 		for row in csv_reader:
 			print(row[0] +'\t\t'+ row[1]) # [1:-1]
-			e = Entry(left_URI_text = row[0], right_URI_text = row[1])
+			left_triply = quote(row[0],safe='')
+			right_triply = quote(row[1],safe='')
+			e = Entry(left_URI_text = row[0], right_URI_text = row[1], left_URI_text_triply = left_triply, right_URI_text_triply = right_triply)
 			e.save()
 	print ('There are in total ', Entry.objects.count(), ' entries')
 		# equal =  'equal'
@@ -41,11 +44,45 @@ def load_entries(path):
 	e = Choice(choice_text = Choice.unknown)
 	e.save()
 
+def load_annotated_entries(path):
+	global path_to_csv_file
+	path_to_csv_file = path
+	filename = path
+	Entry.objects.all().delete()
+	Choice.objects.all().delete()
+
+	e = Choice(choice_text = Choice.equal)
+	e.save()
+	e = Choice(choice_text = Choice.left_more_general)
+	e.save()
+	e = Choice(choice_text = Choice.right_more_general)
+	e.save()
+	e = Choice(choice_text = Choice.neither)
+	e.save()
+	e = Choice(choice_text = Choice.unknown)
+	e.save()
+
+	dict_reader = csv.DictReader(open(filename, newline=''), delimiter='\t')
+	for row in dict_reader:
+		# print (row)
+		left = row['LEFT']
+		right = row['RIGHT']
+		choice = row['UserChoice']
+		decision = row['Decision']
+		comment = row['Comment']
+		left_triply = quote(left,safe='')
+		right_triply = quote(right,safe='')
+		e = Entry(left_URI_text = left, right_URI_text = right, left_URI_text_triply = left_triply, right_URI_text_triply = right_triply, user_choice = choice, user_decision = decision, comment = comment)
+		e.save()
+
+	print ('There are in total ', Entry.objects.count(), ' entries')
+
 
 def export(request):
 	global path_to_csv_file
-	print('path to csv file',path_to_csv_file)
-	export_full_name = path_to_csv_file[:path_to_csv_file.rfind('/')+1] + path_to_csv_file[path_to_csv_file.rfind('/')+1:][:2] + 'pair_annotated.tsv' # change it to TSV file.
+	print('path to csv file', path_to_csv_file)
+	# export_full_name = path_to_csv_file[:path_to_csv_file.rfind('/')+1] + path_to_csv_file[path_to_csv_file.rfind('/')+1:][:2] + 'pair_annotated.tsv' # change it to TSV file.
+	export_full_name = path_to_csv_file + '_annotated.tsv' # change it to TSV file.
 	with open(export_full_name, "w+") as file:
 		writer = csv.writer(file,delimiter='\t')
 		writer.writerow([ "LEFT", "RIGHT", "UserChoice", "Decision", "Comment"])
@@ -72,23 +109,6 @@ def next_entry(request, entry_id):
 	entry = get_object_or_404(Entry, pk=entry_id)
 	return render(request, 'pair/detail.html', {'entry': entry, 'all_choices': all_choices})
 
-# def index(request):
-#     all_entries = Entry.objects.all()
-#     count_total_entries = len(all_entries)
-#
-#     to_anno_entries = [a for a in all_entries if a.needs_anno()]
-#     output = ', '.join([q.URI_text for q in to_anno_entries])
-# #     return HttpResponse(output + ' totoal=' + str(count_total_entries) + '; to decide=' + str(count_total_entries))
-# #
-# #
-# # def index(request):
-# #     latest_question_list = Question.objects.order_by('-pub_date')[:5]
-#     template = loader.get_template('pair/index.html')
-#     context = {
-#         'latest_question_list': all_entries,
-#     }
-#     return HttpResponse(template.render(context, request))
-
 def index(request):
 	all_entries = Entry.objects.all()
 	all_choices = Choice.objects.all()
@@ -114,21 +134,30 @@ def load (request):
 			e = Choice(choice_text = new_anno)
 			e.save()
 
+	context = {'all_entries': all_entries, 'amount_entry':amount_entry, 'all_choices':all_choices, 'path':path_to_csv_file,'amount_choice':amount_choice}
+	return render(request, 'pair/index.html', context)
 
-	# if request.POST['clear_names']:
-	#     print ('REMOVE ALL NAMES')
-	#     Choice.objects.all().delete()
+# -=====new method for the checking of annotations
+
+def checkannotation (request):
+	global path_to_csv_file
+	all_entries = Entry.objects.all()
+	amount_entry = len(all_entries)
+	all_choices = Choice.objects.all()
+	amount_choice = len (all_choices)
+
+	path_to_csv_file = request.POST['c_name'] # u_name is the name of the input tag
+	if path_to_csv_file != None and path_to_csv_file != '':
+		print ('load the file at = ', path_to_csv_file)
+		load_annotated_entries(path_to_csv_file)
 
 	context = {'all_entries': all_entries, 'amount_entry':amount_entry, 'all_choices':all_choices, 'path':path_to_csv_file,'amount_choice':amount_choice}
 	return render(request, 'pair/index.html', context)
 
-# def detail(request, entry_id):
-#     return HttpResponse("You're looking at entry %s." % entry_id)
-
 def detail(request, entry_id):
 	entry = get_object_or_404(Entry, pk=entry_id)
 	all_choices = Choice.objects.all()
-	print ('Amount of choices ', len (all_choices))
+	# print ('Amount of choices ', len (all_choices))
 	return render(request, 'pair/detail.html', {'entry': entry, 'all_choices': all_choices})
 
 # def results(request, entry_id):
@@ -186,7 +215,7 @@ def decide(request, entry_id):
 		elif entry.user_choice == Choice.right_more_general or entry.user_choice == Choice.equal:
 			entry.user_decision = 'remain'
 		elif entry.user_choice == Choice.unknown :
-			entry.user_decision == 'unknown'
+			entry.user_decision = 'unknown'
 
 		# find if there is an entry similar and make decision automatically
 		for e in Entry.objects.all():
@@ -196,11 +225,17 @@ def decide(request, entry_id):
 					e.user_decision =  'remain'
 				elif entry.user_choice == Choice.right_more_general:
 					e.user_choice = Choice.left_more_general
-					e.user_decision ==  'remove'
+					e.user_decision =  'remove'
 				elif entry.user_choice == Choice.equal:
+					e.user_choice = Choice.equal
 					e.user_decision = 'remain'
+				elif entry.user_choice == Choice.neither:
+					e.user_choice = Choice.neither
+					e.user_decision = 'remove'
 				else:
 					e.user_decision = 'unknown'
+					e.user_choice = Choice.unknown
+				e.save()
 
 		print ('chosen: ', selected_choice.choice_text)
 		entry.save()

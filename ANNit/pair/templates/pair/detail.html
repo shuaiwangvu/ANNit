@@ -47,7 +47,7 @@ h1 {letter-spacing: 6px}
 
 
 {% if entry.user_choice != 'TBD' %}
-<h3>There is already a decision on this entry.</h3>
+<h3>There is already a decision on this entry: {{entry.user_choice}}.</h3>
 {% endif %}
 
 
@@ -63,6 +63,7 @@ h1 {letter-spacing: 6px}
 <input type="submit" value="decide">
 </form>
 
+<a href="{% url 'pair:next_entry' entry.id%}">Skip (to next triple)</a>
 
 <div class="w3-container">
 <form method="post" enctype="multipart/form-data" action="{% url 'pair:decide' entry.id %}">
@@ -105,7 +106,7 @@ h1 {letter-spacing: 6px}
 <div class="row">
   <div class="column" style="background-color:#aaa;">
 
-    <iframe id="content" src="https://krr.triply.cc/krr/lod-a-lot/browser?resource={{entry.left_URI_text}}" style="display:hidden;" width="634" height="600" ></iframe>
+    <iframe id="content" src="https://krr.triply.cc/krr/lod-a-lot/browser?resource={{entry.left_URI_text_triply}}" style="display:hidden;" width="634" height="600" ></iframe>
 
   </div>
   <!-- <div class="column" style="background-color:#bbb;">
@@ -114,7 +115,7 @@ h1 {letter-spacing: 6px}
 
   <div class="column" style="background-color:#aaa;">
 
-    <iframe id="content" src="https://krr.triply.cc/krr/lod-a-lot/browser?resource={{entry.right_URI_text}}" style="display:hidden;" width="634" height="600" ></iframe>
+    <iframe id="content" src="https://krr.triply.cc/krr/lod-a-lot/browser?resource={{entry.right_URI_text_triply}}" style="display:hidden;" width="634" height="600" ></iframe>
 
   </div>
   <!-- <div class="column" style="background-color:#bbb;">

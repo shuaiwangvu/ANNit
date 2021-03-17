@@ -7,6 +7,7 @@ app_name = 'pair'
 urlpatterns = [
     path('', views.index, name='index'),
     path('load', views.load, name='load'),
+    path('checkannotation', views.checkannotation, name='checkannotation'),
     # ex: /polls/5/
     path('<int:entry_id>/', views.detail, name='detail'),
     # ex: /polls/5/results/
