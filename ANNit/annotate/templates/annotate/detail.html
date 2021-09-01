@@ -75,6 +75,8 @@ h1 {letter-spacing: 6px}
 
 {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
 
+<p> IRI = {{ entry.URI_text}} </p>
+<p> existing choice = {{ entry.user_choice}} </p>
 <form action="{% url 'annotate:decide' entry.id %}" method="post">
 {% csrf_token %}
 {% for choice in all_choices.all %}

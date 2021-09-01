@@ -1,0 +1,6 @@
+ANNit/*.tsv
+ANNit/*.csv
+ANNit/annotate/__pycache__/
+ANNit/db.sqlite3
+.DS_Store
+ANNit/.DS_Store

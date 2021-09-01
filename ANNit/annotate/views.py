@@ -12,21 +12,57 @@ def load_entries(path):
     global path_to_csv_file
     path_to_csv_file = path
     Entry.objects.all().delete()
+    my_id = 0
     with open(path) as file:
         csv_reader = csv.DictReader(file)
         for row in csv_reader:
-            print(row['Entity']) # [1:-1]
-            e = Entry(URI_text = row['Entity'])
+            # print(row['Entity']) # [1:-1]
+            e = Entry(id = my_id)
+            e.URI_text = row['Entity']
             e.save()
+            my_id += 1
     Choice.objects.all().delete()
+
+def load_entries_examination(path):
+    Choice.objects.all().delete()
+    global path_to_csv_file
+    path_to_csv_file = path
+    Entry.objects.all().delete()
+    collect_annotations = set()
+    my_id = 0
+    with open(path) as file:
+        csv_reader = csv.DictReader(file, delimiter="\t")
+        for row in csv_reader:
+            e = Entry(id = my_id)
+            e.URI_text = row['Entity']
+            e.user_choice = row['Annotation']
+            e.comment = row['Comment']
+            print('Entity: ', row['Entity']) # [1:-1]
+            print('Annotation: ', row['Annotation']) # [1:-1]
+            print('Comment: ', row['Comment']) # [1:-1]
+            # e = Entry(URI_text = row['Entity'], exist_choice = row['Annotation'], exist_comment = row['Comment'])
+            e.save()
+            my_id += 1
+            # collect_annotations.add(row['Annotation'])
+            new_anno = row['Annotation']
+            if new_anno not in [s.choice_text for s in Choice.objects.all()] :
+                c = Choice(choice_text = new_anno)
+                c.save()
+    print ('total choices/annotations', len(list(Choice.objects.all())))
+    print ('total entires loaded', len(list(Entry.objects.all())))
+
 
 def export(request):
     global path_to_csv_file
     print('path to csv file',path_to_csv_file)
-    export_full_name = path_to_csv_file[:path_to_csv_file.rfind('/')+1] + path_to_csv_file[path_to_csv_file.rfind('/')+1:][:2] + 'Annotated.tsv' # change it to TSV file.
+    export_full_name = path_to_csv_file +'.export'
+    if 'csv' in path_to_csv_file:
+        export_full_name = path_to_csv_file[:path_to_csv_file.rfind('/')+1] + path_to_csv_file[path_to_csv_file.rfind('/')+1:][:-4] + '_Annotated.tsv' # change it to TSV file.
+    elif 'tsv' in path_to_csv_file:
+        export_full_name = path_to_csv_file[:path_to_csv_file.rfind('/')+1] + path_to_csv_file[path_to_csv_file.rfind('/')+1:][:-4] + '_Verified.tsv' # change it to TSV file.
     with open(export_full_name, "w+") as file:
         writer = csv.writer(file,delimiter='\t')
-        writer.writerow([ "Entry", "Annotation", "Comment"])
+        writer.writerow([ "Entity", "Annotation", "Comment"])
         all_entries = Entry.objects.all()
         for e in all_entries:
             writer.writerow([e.URI_text, e.user_choice, e.comment])
@@ -81,9 +117,15 @@ def load (request):
     amount_choice = len (all_choices)
 
     path_to_csv_file = request.POST['u_name'] # u_name is the name of the input tag
-    if path_to_csv_file != None and path_to_csv_file != '':
-        print ('load the file at = ', path_to_csv_file)
-        load_entries(path_to_csv_file)
+    if 'tsv' in path_to_csv_file:
+        if path_to_csv_file != None and path_to_csv_file != '':
+            print ('examining tsv: load the file at = ', path_to_csv_file)
+            existing_annos = load_entries_examination(path_to_csv_file)
+
+    elif 'csv' in path_to_csv_file:
+        if path_to_csv_file != None and path_to_csv_file != '':
+            print ('load the file at = ', path_to_csv_file)
+            load_entries(path_to_csv_file)
 
     new_anno = request.POST['a_name'] # u_name is the name of the input tag
     if new_anno != None and new_anno != '':
@@ -104,9 +146,11 @@ def load (request):
 #     return HttpResponse("You're looking at entry %s." % entry_id)
 
 def detail(request, entry_id):
-    entry = get_object_or_404(Entry, pk=entry_id)
+    print ('There are in total ', len (Entry.objects.all()), ' entries.')
+    # entry = get_object_or_404(Entry, pk=entry_id)
+    entry = Entry.objects.get(pk=entry_id)
     all_choices = Choice.objects.all()
-    print ('Amount of choices ', len (all_choices))
+    # print ('Amount of choices ', len (all_choices))
     return render(request, 'annotate/detail.html', {'entry': entry, 'all_choices': all_choices})
 
 # def results(request, entry_id):
