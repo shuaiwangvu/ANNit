@@ -2,10 +2,7 @@
 
 ANN'it or ANNit is a tool developed for fast annotation of entities. ANNit was implemented with Django.
 
-To install Django, see this page:
-https://docs.djangoproject.com/en/3.0/topics/install/
-
--
+--
 
 To run the server:
 python manage.py runserver
