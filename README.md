@@ -1,12 +1,14 @@
+
+
 # ANNit
 
-ANN'it or ANNit is a tool developed for fast annotation of entities. ANNit was implemented with Django.
+ANN'it or ANNit is a tool developed for fast annotation of entities in the identity graph. ANNit was implemented in Python with Django.
 
 --
 
 To run the server:
-python manage.py runserver
-And you will see the app at http://127.0.0.1:8000/
+`python manage.py runserver`
+Then, you will see the app in your browser at http://127.0.0.1:8000/.
 
 --
 
@@ -19,6 +21,6 @@ And you will see the app at http://127.0.0.1:8000/
 
 For new users, I suggest to play with the example file SA2_4.nodes.csv first.
 
-In case of any error or confusion, please report to Shuai Wang at shuai.wang@vu.nl.
+Please report errors to Shuai Wang at shuai.wang@vu.nl. Thank you!
 
-Thank you! Good luck!
+> Written with [StackEdit](https://stackedit.io/).
